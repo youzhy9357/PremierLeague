@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025/26 賽季英超聯賽全賽程分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f8f7f4;
+            color: #1f2937;
+        }
+        .card-link {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 16px; /* Increased gap for better spacing */
+        }
+        .card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .match-info {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* text-gray-600 */
+            line-height: 1.25;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">2025/26 賽季英超聯賽</h1>
+            <p class="mt-2 text-lg text-gray-600">全賽程38輪戰報分析與深度洞察</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800">賽事分析列表</h2>
+            <p class="mt-2 max-w-2xl mx-auto text-gray-600">點擊下方卡片，查看每一輪的詳細戰報與數據分析。</p>
+        </div>
+
+        <!-- 賽事卡片網格，共38輪 -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+            <!-- JavaScript 會在此處動態生成38個卡片 -->
+        </div>
+    </main>
+
+    <footer class="bg-white mt-16 border-t">
+        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-gray-500">
+            <p>&copy; 2025 賽季英超聯賽分析。所有權利保留。</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gridContainer = document.querySelector('.grid');
+
+            // 這組數據為虛擬賽程，因為實際2025/26賽季賽程尚未公佈
+            const roundData = [
+                { round: 1, date: "2025/08/16" },
+                { round: 2, date: "2025/08/23" },
+                { round: 3, date: "2025/08/30" },
+                { round: 4, date: "2025/09/13" },
+                { round: 5, date: "2025/09/20" },
+                { round: 6, date: "2025/09/27" },
+                { round: 7, date: "2025/10/04" },
+                { round: 8, date: "2025/10/18" },
+                { round: 9, date: "2025/10/25" },
+                { round: 10, date: "2025/11/01" },
+                { round: 11, date: "2025/11/08" },
+                { round: 12, date: "2025/11/22" },
+                { round: 13, date: "2025/11/29" },
+                { round: 14, date: "2025/12/06" },
+                { round: 15, date: "2025/12/13" },
+                { round: 16, date: "2025/12/20" },
+                { round: 17, date: "2025/12/26" },
+                { round: 18, date: "2026/01/03" },
+                { round: 19, date: "2026/01/10" },
+                { round: 20, date: "2026/01/17" },
+                { round: 21, date: "2026/01/24" },
+                { round: 22, date: "2026/01/31" },
+                { round: 23, date: "2026/02/07" },
+                { round: 24, date: "2026/02/14" },
+                { round: 25, date: "2026/02/21" },
+                { round: 26, date: "2026/02/28" },
+                { round: 27, date: "2026/03/07" },
+                { round: 28, date: "2026/03/14" },
+                { round: 29, date: "2026/03/21" },
+                { round: 30, date: "2026/04/04" },
+                { round: 31, date: "2026/04/11" },
+                { round: 32, date: "2026/04/18" },
+                { round: 33, date: "2026/04/25" },
+                { round: 34, date: "2026/05/02" },
+                { round: 35, date: "2026/05/09" },
+                { round: 36, date: "2026/05/13" },
+                { round: 37, date: "2026/05/16" },
+                { round: 38, date: "2026/05/23" },
+            ];
+
+            // 迴圈生成38個賽事卡片
+            for (let i = 1; i <= 38; i++) {
+                const cardWrapper = document.createElement('div');
+                cardWrapper.className = 'card-link block p-6 bg-white rounded-lg shadow-md hover:bg-gray-50';
+                
+                const data = roundData[i - 1];
+
+                const heading = document.createElement('h3');
+                heading.className = 'text-xl font-bold text-gray-800 text-center';
+                heading.textContent = `第${data.round}輪`;
+                
+                const dateInfo = document.createElement('p');
+                dateInfo.className = 'match-info';
+                dateInfo.textContent = `${data.date}`;
+                
+                // New flex container for buttons
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'flex gap-2 w-full';
+
+                // Create the "Detailed Analysis" button/link
+                const analysisLink = document.createElement('a');
+                analysisLink.href = `2526-${i}.html`;
+                analysisLink.className = 'flex-1 text-center bg-gray-700 text-white px-2 py-2 rounded-full font-semibold text-sm hover:bg-gray-800 transition-colors';
+                analysisLink.textContent = '詳細分析';
+
+                // Create the "Match Results" button/link
+                const resultsLink = document.createElement('a');
+                resultsLink.href = `2526-${i}B.html`; // Placeholder link for user to update
+                resultsLink.className = 'flex-1 text-center bg-gray-200 text-gray-700 px-2 py-2 rounded-full font-semibold text-sm hover:bg-gray-300 transition-colors';
+                resultsLink.textContent = '賽事結果';
+                
+                buttonContainer.appendChild(analysisLink);
+                buttonContainer.appendChild(resultsLink);
+
+                cardWrapper.appendChild(heading);
+                cardWrapper.appendChild(dateInfo);
+                cardWrapper.appendChild(buttonContainer);
+                
+                gridContainer.appendChild(cardWrapper);
+            }
+        });
+    </script>
+
+</body>
+</html>

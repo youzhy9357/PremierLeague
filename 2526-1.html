@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英超聯賽2025/26首輪對戰分析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.m" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The application is designed as a thematic, single-page dashboard to transform the static report into an interactive experience. The structure prioritizes user exploration over the report's linear format. It begins with a high-level summary of the season's theme ("A Season of Change"), followed by interactive sections for "Key Storylines" (new managers, major transfers). The core is the "Spotlight Matches" section, using a tabbed interface for deep dives into the three main games, complete with dynamic charts for head-to-head data. A more compact "Around the League" section allows for quick scanning of other fixtures. Finally, a summary table presents all predictions. This non-linear structure allows users to choose their own path through the analysis, enhancing engagement and comprehension. -->
+    <!-- Visualization & Content Choices: Report Info: Head-to-head stats (e.g., Man Utd vs Arsenal wins/losses). Goal: Compare historical performance intuitively. Viz/Method: Doughnut Chart (Chart.js/Canvas). Interaction: Chart dynamically updates when a user clicks on a different spotlight match tab. Justification: A doughnut chart provides a clear, immediate visual comparison of proportions, which is more engaging and easier to digest than a text-based table. It supports the interactive, dashboard-like structure of the application. Report Info: Major transfers list. Goal: Inform users about key player movements. Viz/Method: Interactive cards (HTML/CSS/JS). Interaction: Hovering over a card could reveal more details (not implemented to keep it simple, but planned). Justification: Cards break down dense information into digestible chunks, improving readability over a long table. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            background-image: repeating-linear-gradient(
+                -45deg,
+                #f8fafc, /* slate-50 */
+                #f8fafc 1px,
+                #f5f5f4 1px,
+                #f5f5f4 8px
+            );
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #4c1d95; /* violet-800 */
+            color: white;
+            font-weight: 700;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .team-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.25rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 320px;
+        }
+    </style>
+</head>
+<body class="text-stone-900">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-violet-900 mb-2">英超聯賽 2025/26 賽季</h1>
+            <p class="text-xl md:text-2xl text-stone-600">首輪對戰前瞻：變革與不確定性</p>
+        </header>
+
+        <main>
+            <nav class="flex flex-wrap justify-center gap-2 mb-8">
+                <button data-target="overview" class="nav-button active px-4 py-2 bg-white rounded-full shadow-sm hover:bg-violet-100">賽季總覽</button>
+                <button data-target="spotlight" class="nav-button px-4 py-2 bg-white rounded-full shadow-sm hover:bg-violet-100">焦點對決</button>
+                <button data-target="all-matches" class="nav-button px-4 py-2 bg-white rounded-full shadow-sm hover:bg-violet-100">完整賽程</button>
+            </nav>
+
+            <div id="app-content">
+                <section id="overview" class="content-section active space-y-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-bold mb-4 text-violet-800">📖 新賽季故事線</h2>
+                        <p class="text-stone-700 leading-relaxed">
+                            2025/26賽季的英超聯賽以「變革」為核心主題。上季利物浦意外奪冠，打破了曼城的統治預期，證明了非數據因素的重要性。本賽季，多支球隊更換主帥，夏季轉會窗風起雲湧，為聯賽格局帶來了巨大的不確定性。從衛冕冠軍的陣容變動，到曼聯的戰術重塑，再到升班馬的挑戰，首輪比賽將是檢驗各隊變革成果的第一塊試金石。
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold mb-4 text-violet-800">🔄 夏季重點轉會</h3>
+                            <div class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                                <div class="p-3 bg-violet-50 rounded-md">
+                                    <p class="font-semibold">Florian Wirtz → 利物浦</p>
+                                    <p class="text-sm text-stone-600">轉會費: £100m | 位置: 中場</p>
+                                </div>
+                                <div class="p-3 bg-stone-50 rounded-md">
+                                    <p class="font-semibold">Matheus Cunha → 曼聯</p>
+                                    <p class="text-sm text-stone-600">轉會費: £62.5m | 位置: 前鋒</p>
+                                </div>
+                                <div class="p-3 bg-stone-50 rounded-md">
+                                    <p class="font-semibold">Dean Huijsen → 皇家馬德里</p>
+                                    <p class="text-sm text-stone-600">轉會費: £50m | 般尼茅夫售出</p>
+                                </div>
+                                <div class="p-3 bg-stone-50 rounded-md">
+                                    <p class="font-semibold">Tijjani Reijnders → 曼城</p>
+                                    <p class="text-sm text-stone-600">轉會費: £46.5m | 位置: 中場</p>
+                                </div>
+                                <div class="p-3 bg-violet-50 rounded-md">
+                                    <p class="font-semibold">Milos Kerkez → 利物浦</p>
+                                    <p class="text-sm text-stone-600">轉會費: £40m | 般尼茅夫售出</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h3 class="text-xl font-bold mb-4 text-violet-800">👔 教練席大地震</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-semibold">Arne Slot (利物浦)</h4>
+                                    <p class="text-sm text-stone-600">戰術風格：繼承高普的高位壓迫，強調快速攻防轉換。</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">Rúben Amorim (曼聯)</h4>
+                                    <p class="text-sm text-stone-600">戰術風格：偏好三中堅體系，注重控球與攻擊性邊翼衛。</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">Thomas Frank (熱刺)</h4>
+                                    <p class="text-sm text-stone-600">戰術風格：戰術靈活多變，擅長直接、高強度的進攻模式。</p>
+                                </div>
+                                 <div>
+                                    <h4 class="font-semibold">Graham Potter (韋斯咸)</h4>
+                                    <p class="text-sm text-stone-600">戰術風格：以戰術多樣性著稱，能根據對手靈活調整陣型。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="spotlight" class="content-section">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                         <div class="flex flex-wrap justify-center border-b border-stone-200 mb-6">
+                            <button data-match="munars" class="spotlight-btn active flex-grow p-3 text-center font-semibold border-b-2 border-violet-800 text-violet-800">曼聯 vs 阿仙奴</button>
+                            <button data-match="livbou" class="spotlight-btn flex-grow p-3 text-center font-semibold border-b-2 border-transparent text-stone-500 hover:text-violet-800">利物浦 vs 伯恩茅斯</button>
+                            <button data-match="wolmci" class="spotlight-btn flex-grow p-3 text-center font-semibold border-b-2 border-transparent text-stone-500 hover:text-violet-800">狼隊 vs 曼城</button>
+                        </div>
+
+                        <div id="spotlight-content">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="all-matches" class="content-section">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h2 class="text-2xl font-bold mb-6 text-center text-violet-800">首輪完整賽程與預測</h2>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="match-list-container">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const spotlightButtons = document.querySelectorAll('.spotlight-btn');
+            const spotlightContent = document.getElementById('spotlight-content');
+            const matchListContainer = document.getElementById('match-list-container');
+            let h2hChart = null;
+
+            const teamColors = {
+                '利物浦': { bg: '#d32f2f', text: '#ffffff' }, '伯恩茅斯': { bg: '#000000', text: '#ffffff' },
+                '曼聯': { bg: '#da291c', text: '#fbe122' }, '阿仙奴': { bg: '#ef0107', text: '#ffffff' },
+                '狼隊': { bg: '#fdb913', text: '#231f20' }, '曼城': { bg: '#6cabdd', text: '#ffffff' },
+                '阿士東維拉': { bg: '#95bfe5', text: '#670e36' }, '紐卡素': { bg: '#241f20', text: '#ffffff' },
+                '熱刺': { bg: '#132257', text: '#ffffff' }, '般尼': { bg: '#6c1d45', text: '#f9e090' },
+                '車路士': { bg: '#034694', text: '#ffffff' }, '水晶宮': { bg: '#1b458f', text: '#c4122e' },
+                '白禮頓': { bg: '#0057b8', text: '#ffffff' }, '富咸': { bg: '#000000', text: '#ffffff' },
+                '諾定咸森林': { bg: '#e53233', text: '#ffffff' }, '賓福特': { bg: '#e30613', text: '#ffffff' },
+                '新特蘭': { bg: '#eb172b', text: '#ffffff' }, '韋斯咸': { bg: '#7a263a', text: '#1bb1e7' },
+                '列斯聯': { bg: '#ffcd00', text: '#1d428a' }, '愛華頓': { bg: '#003399', text: '#ffffff' },
+            };
+
+            const spotlightData = {
+                munars: {
+                    title: "豪門對決：曼聯 vs 阿仙奴",
+                    teams: ["曼聯", "阿仙奴"],
+                    narrative: "新帥阿莫林的三中堅體系首次面臨重大考驗，將直接對抗阿迪達領導下戰術成熟的阿仙奴。這不僅是球員的較量，更是新舊戰術哲學的正面對決。曼聯的防守能否抵禦阿仙奴的高效壓迫是比賽最大看點。",
+                    h2h: { labels: ["曼聯勝", "阿仙奴勝", "平局"], data: [102, 90, 51], recent: "近5場：阿仙奴3勝2平" },
+                    prediction: { result: "阿仙奴勝", score: "1-2" }
+                },
+                livbou: {
+                    title: "揭幕戰：利物浦 vs 伯恩茅斯",
+                    teams: ["利物浦", "伯恩茅斯"],
+                    narrative: "衛冕冠軍在安菲爾德開啟新賽季，這也是新帥斯洛特的英超首秀。新援維爾茨備受期待，但部分主力的傷病為比賽帶來變數。利物浦歷史戰績佔優，但新體系仍需實戰檢驗。",
+                    h2h: { labels: ["利物浦勝", "伯恩茅斯勝", "平局"], data: [12, 1, 0], recent: "近13場交鋒" },
+                    prediction: { result: "利物浦勝", score: "3-1" }
+                },
+                wolmci: {
+                    title: "強勢對抗：狼隊 vs 曼城",
+                    teams: ["狼隊", "曼城"],
+                    narrative: "奪冠熱門曼城客場挑戰狼隊。瓜迪奧拉的戰術體系不斷進化，即使失去核心球員，攻擊力依舊強大。狼隊可能採取低位防守反擊戰術，他們過去曾有爆冷擊敗曼城的記錄。",
+                    h2h: { labels: ["狼隊勝", "曼城勝", "平局"], data: [1, 9, 0], recent: "近10場交鋒" },
+                    prediction: { result: "曼城勝", score: "0-2" }
+                }
+            };
+
+            const allMatchesData = [
+                { teams: ["利物浦", "伯恩茅斯"], time: "08-16 03:00", prediction: { result: "利物浦勝", score: "3-1" } },
+                { teams: ["阿士東維拉", "紐卡素"], time: "08-16 19:30", prediction: { result: "平局", score: "1-1" } },
+                { teams: ["熱刺", "般尼"], time: "08-16 22:00", prediction: { result: "熱刺勝", score: "4-0" } },
+                { teams: ["白禮頓", "富咸"], time: "08-16 22:00", prediction: { result: "平局", score: "1-1" } },
+                { teams: ["新特蘭", "韋斯咸"], time: "08-16 22:00", prediction: { result: "韋斯咸勝", score: "0-2" } },
+                { teams: ["狼隊", "曼城"], time: "08-17 00:30", prediction: { result: "曼城勝", score: "0-2" } },
+                { teams: ["車路士", "水晶宮"], time: "08-17 21:00", prediction: { result: "車路士勝", score: "1-0" } },
+                { teams: ["諾定咸森林", "賓福特"], time: "08-17 21:00", prediction: { result: "諾定咸森林勝", score: "2-1" } },
+                { teams: ["曼聯", "阿仙奴"], time: "08-17 23:30", prediction: { result: "阿仙奴勝", score: "1-2" } },
+                { teams: ["列斯聯", "愛華頓"], time: "08-19 03:00", prediction: { result: "列斯聯勝", score: "2-1" } }
+            ];
+
+            function getTeamLogo(teamName) {
+                const colors = teamColors[teamName] || { bg: '#cccccc', text: '#000000' };
+                const initial = teamName.substring(0, 1);
+                return `<div class="team-logo" style="background-color: ${colors.bg}; color: ${colors.text};">${initial}</div>`;
+            }
+
+            function renderSpotlightContent(matchKey) {
+                const data = spotlightData[matchKey];
+                const [home, away] = data.teams;
+                
+                spotlightContent.innerHTML = `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <div class="flex justify-around items-center mb-4">
+                                <div class="text-center">
+                                    ${getTeamLogo(home)}
+                                    <p class="font-bold mt-2">${home}</p>
+                                </div>
+                                <div class="text-2xl font-bold text-stone-400">vs</div>
+                                <div class="text-center">
+                                    ${getTeamLogo(away)}
+                                    <p class="font-bold mt-2">${away}</p>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-violet-800">${data.title}</h3>
+                            <p class="text-stone-700 mb-4">${data.narrative}</p>
+                            <div class="bg-violet-50 p-4 rounded-md text-center">
+                                <p class="text-lg font-bold text-violet-900">預測賽果: ${data.prediction.result} (${data.prediction.score})</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-center font-semibold mb-2">歷史交鋒數據 (${data.h2h.recent})</h4>
+                            <div class="chart-container">
+                                <canvas id="h2hChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                renderH2HChart(data.h2h);
+            }
+
+            function renderH2HChart(h2hData) {
+                const ctx = document.getElementById('h2hChart').getContext('2d');
+                if (h2hChart) {
+                    h2hChart.destroy();
+                }
+                h2hChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: h2hData.labels,
+                        datasets: [{
+                            data: h2hData.data,
+                            backgroundColor: ['#4c1d95', '#a78bfa', '#d1d5db'],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + ' 場';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function renderAllMatches() {
+                matchListContainer.innerHTML = allMatchesData.map(match => {
+                    const [home, away] = match.teams;
+                    return `
+                        <div class="p-4 border border-stone-200 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="text-sm text-stone-500">${match.time.split(' ')[1]}</div>
+                                <div>
+                                    <p class="font-semibold">${home} vs ${away}</p>
+                                    <p class="text-sm text-violet-700 font-medium">預測: ${match.prediction.result} (${match.prediction.score})</p>
+                                </div>
+                            </div>
+                            <div class="flex -space-x-4">
+                                ${getTeamLogo(home)}
+                                ${getTeamLogo(away)}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    contentSections.forEach(section => {
+                        section.classList.toggle('active', section.id === targetId);
+                    });
+                });
+            });
+
+            spotlightButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const matchKey = button.dataset.match;
+                    spotlightButtons.forEach(btn => {
+                        btn.classList.remove('active', 'border-violet-800', 'text-violet-800');
+                        btn.classList.add('border-transparent', 'text-stone-500');
+                    });
+                    button.classList.add('active', 'border-violet-800', 'text-violet-800');
+                    button.classList.remove('border-transparent', 'text-stone-500');
+                    renderSpotlightContent(matchKey);
+                });
+            });
+
+            renderSpotlightContent('munars');
+            renderAllMatches();
+        });
+    </script>
+</body>
+</html>
